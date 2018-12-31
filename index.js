@@ -11,6 +11,9 @@ var has = Object.prototype.hasOwnProperty
  * @private
  */
 function Events() {}
+// 我们试图不继承与Object.prototype，因为在一些引擎中，通过这种方式创建一个实例比使用
+// Object.creat(null)要快，如果不支持Object.create(null)这种方式，我们在事件名称上
+// 加入一个字符前缀来保证内置对象的属性不被覆盖或者用作攻击途径。
 
 //
 // We try to not inherit from `Object.prototype`. In some engines creating an
@@ -21,8 +24,9 @@ function Events() {}
 //
 if (Object.create) {
   Events.prototype = Object.create(null);
+  // 这是一个hack，因为有些老版本浏览器像 Android 4, iPhone 5.1, Opera 11 和 Safari 5
+  // 里的`__proto__`依然一直被继承
 
-  //
   // This hack is needed because the `__proto__` property is still inherited in
   // some old browsers like Android 4, iPhone 5.1, Opera 11 and Safari 5.
   //
